@@ -1,0 +1,27 @@
+[package]
+name = "user-stat"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+sqlx = { workspace = true }
+anyhow = { workspace = true }
+prost = { workspace = true }
+tonic = { workspace = true }
+prost-types = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+chrono = { workspace = true }
+rand = "0.8.5"
+
+
+
+
+[build-dependencies]
+prost-build = { workspace = true }
+anyhow = { workspace = true }
+tonic-build = { workspace = true }
+
+[dev-dependencies]
+fake = { version = "4.4.0", features = ["derive", "chrono"] }
+nanoid = "0.4.0"

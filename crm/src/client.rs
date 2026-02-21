@@ -11,7 +11,7 @@ async fn main() -> Result<()> {
         email: "alice@acme.org".to_string(),
     });
 
-    let response = client.create_user(request).await?.into_inner();
+    let response = client.create_user(request).await?;
 
     println!("RESPONSE={:?}", response);
 
