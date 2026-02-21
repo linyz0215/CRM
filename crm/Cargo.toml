@@ -1,0 +1,28 @@
+[package]
+name = "crm"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "server"
+path = "src/server.rs"
+
+
+[[bin]]
+name = "client"
+path = "src/client.rs"
+
+
+
+
+[dependencies]
+anyhow = { workspace = true }
+prost = { workspace = true }
+tonic = { workspace = true }
+prost-types = { workspace = true }
+tokio = { workspace = true }
+
+[build-dependencies]
+prost-build = { workspace = true }
+anyhow = { workspace = true }
+tonic-build = { workspace = true }
