@@ -21,6 +21,7 @@ pub struct UserStatsService {
     inner: Arc<UserStateServiceInner>,
 }
 
+#[allow(dead_code)]
 pub struct UserStateServiceInner {
     config: AppConfig,
     pool: PgPool,

@@ -94,7 +94,7 @@ fn ts_to_utc(ts: Timestamp) -> DateTime<Utc> {
 #[cfg(test)]
 mod tests {
 
-    use crate::AppConfig;
+    use crate::{AppConfig, pb::{IdQuery, QueryRequestBuilder, TimeQuery}};
 
     use super::*;
     use anyhow::Result;
@@ -116,5 +116,45 @@ mod tests {
             println!("{:?}", res);
         }
         Ok(())
+    }
+
+
+
+     #[tokio::test]
+    async fn query_should_work() -> Result<()> {
+        let config = AppConfig::load().expect("Failed to load config");
+        let svc = UserStatsService::new(config).await;
+        let query = QueryRequestBuilder::default()
+            .timestamp(("created_at".to_string(), tq(Some(120), None)))
+            .timestamp(("last_visited_at".to_string(), tq(Some(30), None)))
+            .id(("viewed_but_not_started".to_string(), id(&[252790])))
+            .build()
+            .unwrap();
+        let mut stream = svc.query(query).await?.into_inner();
+
+        while let Some(res) = stream.next().await {
+            println!("{:?}", res);
+        }
+        Ok(())
+    }
+
+    fn id(id: &[u32]) -> IdQuery {
+        IdQuery { ids: id.to_vec() }
+    }
+
+    fn tq(lower: Option<i64>, upper: Option<i64>) -> TimeQuery {
+        TimeQuery {
+            before: lower.map(to_ts),
+            after: upper.map(to_ts),
+        }
+    }
+    fn to_ts(days: i64) -> Timestamp {
+        let dt = Utc::now()
+            .checked_sub_signed(chrono::Duration::days(days))
+            .unwrap();
+        Timestamp {
+            seconds: dt.timestamp(),
+            nanos: dt.timestamp_subsec_nanos() as i32,
+        }
     }
 }

@@ -276,6 +276,59 @@ dependencies = [
 ]
 
 [[package]]
+name = "crm-metadata"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "derive_builder",
+ "fake",
+ "futures",
+ "itertools",
+ "nanoid",
+ "prost",
+ "prost-build",
+ "prost-types",
+ "proto-builder-trait",
+ "rand 0.8.5",
+ "serde",
+ "serde_yaml",
+ "sqlx",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+ "tonic-build",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "crm-send"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "derive_builder",
+ "fake",
+ "futures",
+ "itertools",
+ "nanoid",
+ "prost",
+ "prost-build",
+ "prost-types",
+ "proto-builder-trait",
+ "rand 0.8.5",
+ "serde",
+ "serde_yaml",
+ "sqlx",
+ "tokio",
+ "tonic",
+ "tonic-build",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "crossbeam-queue"
 version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
