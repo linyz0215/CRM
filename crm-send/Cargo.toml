@@ -19,6 +19,8 @@ serde_yaml = { workspace = true }
 futures = "0.3.32"
 tracing = "0.1.44"
 itertools = "0.12.1"
+tokio-stream = "0.1.18"
+uuid = { version = "1.21.0", features = ["v4"] }
 
 
 
@@ -29,5 +31,5 @@ tonic-build = { workspace = true }
 proto-builder-trait = "=0.6.1"
 
 [dev-dependencies]
-fake = { version = "4.4.0", features = ["derive", "chrono"] }
+fake = { version = "2.9.2", features = ["derive", "chrono"] }
 nanoid = "0.4.0"
