@@ -171,7 +171,7 @@ pub mod notification_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Send a notification to a user.
+        ///
         pub async fn send(
             &mut self,
             request: impl tonic::IntoStreamingRequest<Message = super::SendRequest>,
@@ -212,7 +212,7 @@ pub mod notification_server {
             >
             + Send
             + 'static;
-        /// Send a notification to a user.
+        ///
         async fn send(
             &self,
             request: tonic::Request<tonic::Streaming<super::SendRequest>>,

@@ -6,6 +6,6 @@ import "notification/messages.proto";
 
 // The Notification service provides a way to send notifications to users.
 service Notification {
-  // Send a notification to a user.
+  //
   rpc Send(stream SendRequest) returns (stream SendResponse) {}
 }

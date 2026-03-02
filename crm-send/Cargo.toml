@@ -3,6 +3,14 @@ name = "crm-send"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = []
+test_utils = ["fake"]
+
+
+
+
+
 [dependencies]
 sqlx = { workspace = true }
 anyhow = { workspace = true }
@@ -21,7 +29,7 @@ tracing = "0.1.44"
 itertools = "0.12.1"
 tokio-stream = "0.1.18"
 uuid = { version = "1.21.0", features = ["v4"] }
-
+fake = { version = "2.9.2", features = ["derive", "chrono"], optional = true }
 
 
 [build-dependencies]
@@ -31,5 +39,6 @@ tonic-build = { workspace = true }
 proto-builder-trait = "=0.6.1"
 
 [dev-dependencies]
-fake = { version = "2.9.2", features = ["derive", "chrono"] }
+crm-send = { workspace = true, features = ["test_utils"] }
+
 nanoid = "0.4.0"

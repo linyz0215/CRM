@@ -3,6 +3,11 @@ name = "user-stat"
 version = "0.1.0"
 edition = "2024"
 
+
+[features]
+default = []
+test_utils = [ "sqlx-db-tester" ]
+
 [dependencies]
 sqlx = { workspace = true }
 anyhow = { workspace = true }
@@ -19,6 +24,7 @@ serde_yaml = { workspace = true }
 futures = "0.3.32"
 tracing = "0.1.44"
 itertools = "0.12.1"
+sqlx-db-tester = { version = "0.7.1", optional = true }
 
 
 
@@ -31,3 +37,4 @@ proto-builder-trait = "=0.6.1"
 [dev-dependencies]
 fake = { version = "4.4.0", features = ["derive", "chrono"] }
 nanoid = "0.4.0"
+user-stat = { workspace = true, features = ["test_utils"] }

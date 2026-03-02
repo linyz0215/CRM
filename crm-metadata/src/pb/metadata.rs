@@ -81,6 +81,7 @@ pub mod metadata_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    ///
     #[derive(Debug, Clone)]
     pub struct MetadataClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -161,6 +162,7 @@ pub mod metadata_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        ///
         pub async fn materialize(
             &mut self,
             request: impl tonic::IntoStreamingRequest<
@@ -203,6 +205,7 @@ pub mod metadata_server {
             >
             + Send
             + 'static;
+        ///
         async fn materialize(
             &self,
             request: tonic::Request<tonic::Streaming<super::MaterializeRequest>>,
@@ -211,6 +214,7 @@ pub mod metadata_server {
             tonic::Status,
         >;
     }
+    ///
     #[derive(Debug)]
     pub struct MetadataServer<T: Metadata> {
         inner: _Inner<T>,

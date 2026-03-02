@@ -14,7 +14,8 @@ use tracing::{info, warn};
 const CHANNEL_SIZE: usize = 1024;
 
 use crate::{
-    AppConfig, NotificationService, NotificationServiceInner, ResponseStream, ServiceResult, pb::{SendRequest, SendResponse, notification_server::NotificationServer, send_request::Msg}
+    AppConfig, NotificationService, NotificationServiceInner, ResponseStream, ServiceResult,
+    pb::{SendRequest, SendResponse, notification_server::NotificationServer, send_request::Msg},
 };
 
 pub trait Sender {
@@ -89,18 +90,15 @@ fn to_ts() -> Timestamp {
     }
 }
 
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::{
-        pb::{EmailMessage, InAppMessage, SmsMessage},
         AppConfig,
+        pb::{EmailMessage, InAppMessage, SmsMessage},
     };
     use anyhow::Result;
-    use fake::Fake;
-
+    
     #[tokio::test]
     async fn send_should_work() -> Result<()> {
         let config = AppConfig::load()?;

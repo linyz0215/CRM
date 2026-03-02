@@ -15,3 +15,6 @@ sqlx = { version = "0.8.6", features = ["chrono", "postgres", "runtime-tokio", "
 serde = { version = "1.0.228", features = ["derive"] }
 chrono = { version = "0.4.43", features = ["serde"] }
 serde_yaml = "0.9.34"
+user-stat = { path = "user-stat" }
+crm-metadata = { path = "crm-metadata" }
+crm-send = { path = "crm-send" }

@@ -36,7 +36,6 @@ impl UserStatsService {
     }
 
     pub async fn raw_query(&self, req: RawQueryRequest) -> ServiceResult<ResponseStream> {
-        // TODO: query must only return email and name, so we should use sqlparser to parse the query
         let Ok(ret) = sqlx::query_as::<_, User>(&req.query)
             .fetch_all(&self.pool)
             .await
