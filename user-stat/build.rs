@@ -31,7 +31,7 @@ fn main() -> Result<()> {
             &[r#"#[builder(setter(into))]"#],
         )
         .with_field_attributes(
-            &["TimeQuery.before", "TimeQuery.after"],
+            &["TimeQuery.lower", "TimeQuery.upper"],
             &[r#"#[builder(setter(into, strip_option))]"#],
         )
         .with_field_attributes(

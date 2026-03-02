@@ -125,8 +125,8 @@ pub mod test_utils {
 
     pub fn tq(lower: Option<i64>, upper: Option<i64>) -> TimeQuery {
         TimeQuery {
-            before: lower.map(to_ts),
-            after: upper.map(to_ts),
+            lower: lower.map(to_ts),
+            upper: upper.map(to_ts),
         }
     }
 

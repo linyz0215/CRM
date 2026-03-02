@@ -1,43 +1,24 @@
+use std::net::SocketAddr;
+
 use anyhow::Result;
-use crm::pb::{CreateUserRequest, GetUserRequest, User, user_service_server::{UserService, UserServiceServer}};
-use tonic::{Request, Response, Status, transport::Server};
+use crm::{CrmService, config::AppConfig};
+use tonic::transport::Server;
+use tracing::level_filters::LevelFilter;
+use tracing_subscriber::{Layer as _, fmt::Layer, layer::SubscriberExt, util::SubscriberInitExt};
 
 
-#[derive(Default)]
-pub struct UserServer {}
-
-#[tonic::async_trait]
-impl UserService for UserServer {
-    async fn get_user(
-        &self,
-        request: Request<GetUserRequest>,
-    ) -> Result<Response<User>, Status> {
-        let input = request.into_inner();
-        println!("get_user: {:?}", input);
-        Ok(Response::new(User::default()))
-    }
-
-    async fn create_user(
-        &self,
-        request: Request<CreateUserRequest>,
-    ) -> Result<Response<User>, Status> {
-        let input = request.into_inner();
-        println!("create_user: {:?}", input);
-        let user = User::new(1, &input.name, &input.email);
-        Ok(Response::new(user))
-    }
-}
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let addr = "[::1]:50051".parse().unwrap();
-    let svc = UserServer::default();
+    let layer = Layer::new().with_filter(LevelFilter::INFO);
+    tracing_subscriber::registry().with(layer).init();
 
-    println!("UserService listening on {}", addr);
+    let config = AppConfig::load()?;
+    let port = config.server.port;
+    let addr: SocketAddr = format!("[::1]:{}", port).parse().unwrap();
+    tracing::info!("CRM service listening on {}", addr);
 
-    Server::builder()
-        .add_service(UserServiceServer::new(svc))
-        .serve(addr)
-        .await?;
+    let svc = CrmService::try_new(config).await.into_server();
+    Server::builder().add_service(svc).serve(addr).await?;
     Ok(())
 }

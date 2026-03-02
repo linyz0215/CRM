@@ -3,8 +3,10 @@ mod in_app;
 mod sms;
 
 use chrono::Utc;
+use crm_metadata::pb::Content;
 use futures::{Stream, StreamExt};
 use prost_types::Timestamp;
+use uuid::Uuid;
 use std::{ops::Deref, sync::Arc, time::Duration};
 use tokio::{sync::mpsc, time::sleep};
 use tokio_stream::wrappers::ReceiverStream;
@@ -15,7 +17,7 @@ const CHANNEL_SIZE: usize = 1024;
 
 use crate::{
     AppConfig, NotificationService, NotificationServiceInner, ResponseStream, ServiceResult,
-    pb::{SendRequest, SendResponse, notification_server::NotificationServer, send_request::Msg},
+    pb::{EmailMessage, SendRequest, SendResponse, notification_server::NotificationServer, send_request::Msg},
 };
 
 pub trait Sender {
@@ -89,6 +91,26 @@ fn to_ts() -> Timestamp {
         nanos: now.timestamp_subsec_nanos() as i32,
     }
 }
+
+impl SendRequest {
+    pub fn new(
+        subject: String,
+        sender: String,
+        recipients: &[String],
+        contents: &[Content],
+    ) -> Self {
+        let msg = Msg::Email(EmailMessage {
+            message_id: Uuid::new_v4().to_string(),
+            subject,
+            sender,
+            recipients: recipients.to_vec(),
+            body: format!("contents: {:?}", contents),
+        });
+        SendRequest { msg: Some(msg) }
+    }
+}
+
+
 
 #[cfg(test)]
 mod tests {

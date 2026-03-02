@@ -31,8 +31,6 @@ impl MetadataService {
     }
 }
 
-
-
 impl Content {
     pub fn materialize(id: u32) -> Self {
         let mut rng = rand::thread_rng();
@@ -76,6 +74,10 @@ fn created_at() -> Option<Timestamp> {
 fn before(days: u64) -> DateTime<Utc> {
     Utc::now().checked_sub_days(Days::new(days)).unwrap()
 }
+
+
+
+
 
 #[cfg(test)]
 mod tests {

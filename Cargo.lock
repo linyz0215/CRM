@@ -267,12 +267,25 @@ name = "crm"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "chrono",
+ "crm-metadata",
+ "crm-send",
+ "derive_builder",
+ "futures",
  "prost",
  "prost-build",
  "prost-types",
+ "proto-builder-trait",
+ "serde",
+ "serde_yaml",
  "tokio",
+ "tokio-stream",
  "tonic",
  "tonic-build",
+ "tracing",
+ "tracing-subscriber",
+ "user-stat",
+ "uuid",
 ]
 
 [[package]]
@@ -287,7 +300,6 @@ dependencies = [
  "itertools 0.12.1",
  "nanoid",
  "prost",
- "prost-build",
  "prost-types",
  "proto-builder-trait",
  "rand 0.8.5",
@@ -308,6 +320,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "chrono",
+ "crm-metadata",
  "crm-send",
  "derive_builder",
  "fake 2.10.0",
@@ -315,7 +328,6 @@ dependencies = [
  "itertools 0.12.1",
  "nanoid",
  "prost",
- "prost-build",
  "prost-types",
  "proto-builder-trait",
  "rand 0.8.5",
@@ -2588,7 +2600,6 @@ dependencies = [
  "itertools 0.12.1",
  "nanoid",
  "prost",
- "prost-build",
  "prost-types",
  "proto-builder-trait",
  "rand 0.8.5",

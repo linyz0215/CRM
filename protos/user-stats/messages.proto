@@ -11,8 +11,8 @@ message User {
 }
 
 message TimeQuery {
-  google.protobuf.Timestamp before = 1;
-  google.protobuf.Timestamp after = 2;
+  google.protobuf.Timestamp lower = 1;
+  google.protobuf.Timestamp upper = 2;
 }
 
 message IdQuery {

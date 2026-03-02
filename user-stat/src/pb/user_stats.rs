@@ -21,10 +21,10 @@ pub struct User {
 pub struct TimeQuery {
     #[prost(message, optional, tag = "1")]
     #[builder(setter(into, strip_option))]
-    pub before: ::core::option::Option<::prost_types::Timestamp>,
+    pub lower: ::core::option::Option<::prost_types::Timestamp>,
     #[prost(message, optional, tag = "2")]
     #[builder(setter(into, strip_option))]
-    pub after: ::core::option::Option<::prost_types::Timestamp>,
+    pub upper: ::core::option::Option<::prost_types::Timestamp>,
 }
 #[derive(derive_builder::Builder)]
 #[builder(setter(into, strip_option), default)]
@@ -64,6 +64,7 @@ pub mod user_stats_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    ///
     #[derive(Debug, Clone)]
     pub struct UserStatsClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -144,6 +145,7 @@ pub mod user_stats_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        ///
         pub async fn query(
             &mut self,
             request: impl tonic::IntoRequest<super::QueryRequest>,
@@ -169,6 +171,7 @@ pub mod user_stats_client {
                 .insert(GrpcMethod::new("user_stats.UserStats", "Query"));
             self.inner.server_streaming(req, path, codec).await
         }
+        ///
         pub async fn raw_query(
             &mut self,
             request: impl tonic::IntoRequest<super::RawQueryRequest>,
@@ -209,6 +212,7 @@ pub mod user_stats_server {
             >
             + Send
             + 'static;
+        ///
         async fn query(
             &self,
             request: tonic::Request<super::QueryRequest>,
@@ -219,11 +223,13 @@ pub mod user_stats_server {
             >
             + Send
             + 'static;
+        ///
         async fn raw_query(
             &self,
             request: tonic::Request<super::RawQueryRequest>,
         ) -> std::result::Result<tonic::Response<Self::RawQueryStream>, tonic::Status>;
     }
+    ///
     #[derive(Debug)]
     pub struct UserStatsServer<T: UserStats> {
         inner: _Inner<T>,

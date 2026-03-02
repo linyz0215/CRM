@@ -30,10 +30,10 @@ itertools = "0.12.1"
 tokio-stream = "0.1.18"
 uuid = { version = "1.21.0", features = ["v4"] }
 fake = { version = "2.9.2", features = ["derive", "chrono"], optional = true }
+crm-metadata.workspace = true
 
 
 [build-dependencies]
-prost-build = { workspace = true }
 anyhow = { workspace = true }
 tonic-build = { workspace = true }
 proto-builder-trait = "=0.6.1"

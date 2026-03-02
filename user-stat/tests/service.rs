@@ -5,13 +5,13 @@ use futures::StreamExt;
 use sqlx_db_tester::TestPg;
 use tokio::time::sleep;
 use tonic::transport::Server;
-use user_stat::{AppConfig, UserStatsService, pb::{QueryRequestBuilder,  RawQueryRequestBuilder, User, user_stats_client::UserStatsClient}, test_utils::{id, tq}};
+use user_stat::{ UserStatsService, pb::{QueryRequestBuilder,  RawQueryRequestBuilder, User, user_stats_client::UserStatsClient}, test_utils::{id, tq}};
 
 const PORT_BASE: u32 = 60000;
 
 #[tokio::test]
 async fn query_should_work() -> Result<()> {
-    let (tdb, addr) = start_server(PORT_BASE + 2).await?;
+    let (_tdb, addr) = start_server(PORT_BASE + 2).await?;
     let mut client = UserStatsClient::connect(format!("http://{}", addr)).await?;
     let query = QueryRequestBuilder::default()
         .timestamp(("created_at".to_string(), tq(Some(120), None)))
@@ -29,7 +29,7 @@ async fn query_should_work() -> Result<()> {
 
 #[tokio::test]
 async fn raw_query_should_work() -> Result<()> {
-    let (tdb, addr) = start_server(PORT_BASE + 1).await?;
+    let (_tdb, addr) = start_server(PORT_BASE + 1).await?;
     let mut client = UserStatsClient::connect(format!("http://{}", addr)).await?;
     let req = RawQueryRequestBuilder::default().query("SELECT email, name FROM user_stats WHERE created_at > '2024-01-01' LIMIT 5".to_string()).build()?;
 

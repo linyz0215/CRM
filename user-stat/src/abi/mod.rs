@@ -3,10 +3,10 @@ use itertools::Itertools;
 use prost_types::Timestamp;
 use tonic::{Response, Status};
 
-use crate::{ResponseStream, ServiceResult, UserStatsService, pb::{QueryRequest, RawQueryRequest, User}};
-
-
-
+use crate::{
+    ResponseStream, ServiceResult, UserStatsService,
+    pb::{QueryRequest, QueryRequestBuilder, RawQueryRequest, TimeQuery, User},
+};
 
 impl UserStatsService {
     pub async fn query(&self, query: QueryRequest) -> ServiceResult<ResponseStream> {
@@ -16,7 +16,7 @@ impl UserStatsService {
         let time_conditions = query
             .timestamps
             .into_iter()
-            .map(|(k, v)| timestamp_query(&k, v.before, v.after))
+            .map(|(k, v)| timestamp_query(&k, v.lower, v.upper))
             .join(" AND ");
 
         sql.push_str(&time_conditions);
@@ -27,9 +27,11 @@ impl UserStatsService {
             .map(|(k, v)| ids_query(&k, v.ids))
             .join(" AND ");
 
-        sql.push_str(" AND ");
-        sql.push_str(&id_conditions);
-
+        if !id_conditions.is_empty() {
+            sql.push_str(" AND ");
+            sql.push_str(&id_conditions);
+        }
+        
         println!("Generated SQL: {}", sql);
 
         self.raw_query(RawQueryRequest { query: sql }).await
@@ -52,7 +54,28 @@ impl UserStatsService {
     }
 }
 
-
+impl QueryRequest {
+    pub fn new_with_dt(key: &str, d1: DateTime<Utc>, d2: DateTime<Utc>) -> Self {
+        let lower = Timestamp {
+            seconds: d1.timestamp(),
+            nanos: 0,
+        };
+        let upper = Timestamp {
+            seconds: d2.timestamp(),
+            nanos: 0,
+        };
+        QueryRequestBuilder::default()
+            .timestamp((
+                key.to_string(),
+                TimeQuery {
+                    lower: Some(lower),
+                    upper: Some(upper),
+                },
+            ))
+            .build()
+            .unwrap()
+    }
+}
 
 fn ids_query(name: &str, ids: Vec<u32>) -> String {
     if ids.is_empty() {
@@ -89,11 +112,13 @@ fn ts_to_utc(ts: Timestamp) -> DateTime<Utc> {
     Utc.timestamp_opt(ts.seconds, ts.nanos as _).unwrap()
 }
 
-
 #[cfg(test)]
 mod tests {
 
-    use crate::{AppConfig, pb::{IdQuery, QueryRequestBuilder, TimeQuery}};
+    use crate::{
+        AppConfig,
+        pb::{IdQuery, QueryRequestBuilder, TimeQuery},
+    };
 
     use super::*;
     use anyhow::Result;
@@ -109,7 +134,6 @@ mod tests {
             })
             .await?
             .into_inner();
-            
 
         while let Some(res) = stream.next().await {
             println!("{:?}", res);
@@ -117,9 +141,7 @@ mod tests {
         Ok(())
     }
 
-
-
-     #[tokio::test]
+    #[tokio::test]
     async fn query_should_work() -> Result<()> {
         let config = AppConfig::load().expect("Failed to load config");
         let svc = UserStatsService::new(config).await;
@@ -143,8 +165,8 @@ mod tests {
 
     fn tq(lower: Option<i64>, upper: Option<i64>) -> TimeQuery {
         TimeQuery {
-            before: lower.map(to_ts),
-            after: upper.map(to_ts),
+            lower: lower.map(to_ts),
+            upper: upper.map(to_ts),
         }
     }
     fn to_ts(days: i64) -> Timestamp {

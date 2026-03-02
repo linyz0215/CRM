@@ -24,7 +24,6 @@ nanoid = "0.4.0"
 tokio-stream = "0.1.15"
 
 [build-dependencies]
-prost-build = { workspace = true }
 anyhow = { workspace = true }
 tonic-build = { workspace = true }
 proto-builder-trait = "=0.6.1"
