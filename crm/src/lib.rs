@@ -28,16 +28,16 @@ impl Crm for CrmService {
     ///
     async fn recall(
         &self,
-        _request: Request<RecallRequest>,
+        request: Request<RecallRequest>,
     ) -> Result<Response<RecallResponse>, Status> {
-        todo!()
+        self.recall(request.into_inner()).await
     }
     ///
     async fn remind(
         &self,
-        _request: Request<RemindRequest>,
+        request: Request<RemindRequest>,
     ) -> Result<Response<RemindResponse>, Status> {
-        todo!()
+        self.remind(request.into_inner()).await
     }
 }
 

@@ -27,7 +27,7 @@ fn main() -> Result<()> {
             None,
         )
         .with_field_attributes(
-            &["User.email", "User.name", "RawQueryRequest.query"],
+            &["User.email", "User.name", "RawQueryRequest.query", "QueryRequest.op"],
             &[r#"#[builder(setter(into))]"#],
         )
         .with_field_attributes(

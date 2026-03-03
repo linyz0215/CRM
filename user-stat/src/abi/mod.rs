@@ -8,6 +8,12 @@ use crate::{
     pb::{QueryRequest, QueryRequestBuilder, RawQueryRequest, TimeQuery, User},
 };
 
+
+
+// SELECT email, name FROM user_stats WHERE 
+
+
+
 impl UserStatsService {
     pub async fn query(&self, query: QueryRequest) -> ServiceResult<ResponseStream> {
         // generate sql based on query
@@ -31,7 +37,7 @@ impl UserStatsService {
             sql.push_str(" AND ");
             sql.push_str(&id_conditions);
         }
-        
+
         println!("Generated SQL: {}", sql);
 
         self.raw_query(RawQueryRequest { query: sql }).await
