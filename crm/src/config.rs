@@ -20,8 +20,14 @@ pub struct ServerConfig {
     pub metadata: String,
     pub user_stats: String,
     pub notification: String,
+    pub tls: Option<TlsConfig>,
 }
 
+#[derive(Deserialize, Debug)]
+pub struct TlsConfig {
+    pub cert: String,
+    pub key: String,
+}
 
 
 impl AppConfig {

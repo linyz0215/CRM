@@ -1,14 +1,14 @@
 use crm::pb::{RecallRequestBuilder, crm_client::CrmClient};
 use anyhow::Result;
-use tonic::Request;
+use tonic::{Request, transport::{Certificate, Channel, ClientTlsConfig}};
 use uuid::Uuid;
 
 
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // let mut client = CrmClient::connect("http://[::1]:50000").await?;
-
+    // let mut client = CrmClient::connect("http://127.0.0.1:8080").await?;
+    // nginx 
     // let req = WelcomeRequestBuilder::default()
     //     .id(Uuid::new_v4().to_string())
     //     .interval(100u32)
@@ -16,8 +16,10 @@ async fn main() -> Result<()> {
     //     .build()?;
     // let response = client.welcome(Request::new(req)).await?;
     // println!("Response: {:?}", response);
-
-    let mut clent = CrmClient::connect("http://[::1]:50000").await?;
+    let pem = include_str!("../../fixtures/rootCA.pem");
+    let tls = ClientTlsConfig::new().ca_certificate(Certificate::from_pem(pem)).domain_name("localhost");
+    let channel = Channel::from_static("https://[::1]:50000").tls_config(tls)?.connect().await?;
+    let mut clent = CrmClient::new(channel);
 
     let req = RecallRequestBuilder::default()       
         .id(Uuid::new_v4().to_string())
