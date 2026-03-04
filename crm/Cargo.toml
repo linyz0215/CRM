@@ -33,6 +33,9 @@ chrono = { workspace = true }
 futures = "0.3.32"
 tokio-stream = "0.1.15"
 uuid = "1.21.0"
+jwt-simple = { version = "0.12.14", default-features = false, features = ["pure-rust"] }
+
+
 
 
 

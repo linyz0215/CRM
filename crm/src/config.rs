@@ -4,14 +4,12 @@ use serde::Deserialize;
 use anyhow::{Result, bail};
 
 
-
-
-
-
 #[derive(Deserialize, Debug)]
 pub struct AppConfig {
     pub server: ServerConfig,
+    pub auth: AuthConfig,
 }
+
 
 #[derive(Deserialize, Debug)]
 pub struct ServerConfig {
@@ -27,6 +25,11 @@ pub struct ServerConfig {
 pub struct TlsConfig {
     pub cert: String,
     pub key: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct AuthConfig {
+    pub pk: String,
 }
 
 

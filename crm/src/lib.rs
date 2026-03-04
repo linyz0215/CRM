@@ -1,13 +1,13 @@
 use crm_metadata::pb::metadata_client::MetadataClient;
 use crm_send::pb::notification_client::NotificationClient;
-use tonic::{Request, Response, Status, transport::Channel};
+use tonic::{Request, Response, Status, service::interceptor::InterceptedService, transport::Channel};
+use tracing::info;
 use user_stat::pb::user_stats_client::UserStatsClient;
 use tonic::async_trait;
-use crate::{config::AppConfig, pb::{RecallRequest, RecallResponse, RemindRequest, RemindResponse, WelcomeRequest, WelcomeResponse, crm_server::Crm}};
-
+use crate::{ abi::{DecodingKey, User}, config::AppConfig, pb::{RecallRequest, RecallResponse, RemindRequest, RemindResponse, WelcomeRequest, WelcomeResponse, crm_server::{Crm, CrmServer}}};
+use anyhow::Result;
 pub mod config;
 pub mod pb;
-
 mod abi;
 
 pub struct CrmService {
@@ -23,6 +23,7 @@ impl Crm for CrmService {
         &self,
         request: Request<WelcomeRequest>,
     ) -> Result<Response<WelcomeResponse>, Status> {
+        let user: &User = request.extensions().get().unwrap();
         self.welcome(request.into_inner()).await
     }
     ///
@@ -30,6 +31,8 @@ impl Crm for CrmService {
         &self,
         request: Request<RecallRequest>,
     ) -> Result<Response<RecallResponse>, Status> {
+        let user: &User = request.extensions().get().unwrap();
+        info!("Recall request for user: {:?}", user);
         self.recall(request.into_inner()).await
     }
     ///
@@ -55,7 +58,10 @@ impl CrmService {
         }
     }
 
-    pub fn into_server(self) -> crate::pb::crm_server::CrmServer<Self> {
-        crate::pb::crm_server::CrmServer::new(self)
+    pub fn into_server(
+        self,
+    ) -> Result<InterceptedService<CrmServer<CrmService>, DecodingKey>> {
+        let dk = DecodingKey::load(&self.config.auth.pk)?;
+        Ok(CrmServer::with_interceptor(self, dk))
     }
 }
